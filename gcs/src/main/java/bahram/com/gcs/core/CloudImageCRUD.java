@@ -32,7 +32,8 @@ public class CloudImageCRUD
      *
      * All parameters are mandatory.
      * <p/>
-     * NOTE: See full path explanation.
+     * NOTE: See full path explanation:
+     * https://github.com/Mithrandir21/GoogleCloudStorage#object-full-path
      *
      * @param googleStorage
      * @param imageFullPath
@@ -99,9 +100,10 @@ public class CloudImageCRUD
     /**
      * Attempt to read an Image from the given GoogleStorage reference with the given full path,
      * including filename.
-     * The image will be attempted read into a Bitmap object
+     * The image will be attempted read into a Bitmap object and then the Bitmap will be returned.
      * <p/>
-     * NOTE: See full path explanation.
+     * NOTE: See full path explanation:
+     * https://github.com/Mithrandir21/GoogleCloudStorage#object-full-path
      *
      * @param context
      * @param googleStorage
@@ -189,6 +191,9 @@ public class CloudImageCRUD
      * it calls the "insertCloudImage" function with the new image.
      * <p/>
      * File name, size and format (hence location) will be maintained.
+     * <p/>
+     * NOTE: See full path explanation:
+     * https://github.com/Mithrandir21/GoogleCloudStorage#object-full-path
      *
      * @param googleStorage
      * @param imageFullPath
@@ -238,7 +243,8 @@ public class CloudImageCRUD
      *
      * All parameters are mandatory.
      * <p/>
-     * NOTE: See full path explanation.
+     * NOTE: See full path explanation:
+     * https://github.com/Mithrandir21/GoogleCloudStorage#object-full-path
      *
      * @param googleStorage
      * @param imageFullPath
