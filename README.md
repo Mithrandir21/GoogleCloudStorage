@@ -1,6 +1,6 @@
 # GoogleCloudStorage
 
-A library for simple communication with Google Cloud Storage.
+A library for simple communication with Google Cloud Storage in Android.
 
 ### Features:
 - Simple CRUD (Create, Read, Update and Delete) functions for Bitmaps.
@@ -39,6 +39,9 @@ if( CloudImageCRUD.insertCloudImage(googleStorage, fullPath, image, format) )
   Log.d(TAG, "Oh Happy Day! Image has been stored.";
 }
 ```
+
+Min Android SDK: 8
+
 
 ### Future Features:
 - Search functions
