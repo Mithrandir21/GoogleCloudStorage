@@ -6,7 +6,7 @@ A library for simple communication with Google Cloud Storage.
 - Simple CRUD (Create, Read, Update and Delete) functions for Bitmaps.
 - Simple Builder pattern for credentials and bucket storage.
 - Custom or standard JSON factory and HTTP transporter.
-- Easy to debug with existing simple to understand debug log.
+- Easy to debug with existing, simple to understand debug log.
 
 ### Setup:
 Working on creating simple Gradle dependency possibility for easy library usage.<br>
