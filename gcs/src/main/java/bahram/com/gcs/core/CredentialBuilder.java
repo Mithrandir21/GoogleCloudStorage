@@ -25,10 +25,10 @@ import java.util.List;
  */
 public class CredentialBuilder
 {
+    private static final String TAG = "CredentialBuilder";
+
     private static volatile CredentialBuilder singleton = null;
 
-
-    private static final String TAG = "CredentialBuilder";
     private Context context;
 
     private int key_resource_ID;
@@ -39,6 +39,8 @@ public class CredentialBuilder
 
 
     /**
+     * A private Constructor for the class that initiates all mandatory fields.
+     * Used by the setup() function in this class.
      *
      * @param context
      * @param key_resource_ID
@@ -46,51 +48,49 @@ public class CredentialBuilder
      */
     private CredentialBuilder(Context context, int key_resource_ID, String accountID)
     {
-        if( context != null )
+        if( context == null )
         {
-            this.context = context;
+            throw new IllegalArgumentException("Given context was null! Error!");
+        }
 
-            if( accountID != null && accountID.length() > 0 )
-            {
-                this.accountID = accountID;
+        if( accountID == null || accountID.length() > 0 )
+        {
+            throw new IllegalArgumentException("Given accountID was invalid! Error!");
+        }
 
-                String resourceName = context.getResources().getResourceName(key_resource_ID);
 
-                if( resourceName != null )
-                {
-                    this.key_resource_ID = key_resource_ID;
-                }
-                else
-                {
-                    throw new IllegalArgumentException("Given key resource was invalid! Error!");
-                }
-            }
-            else
-            {
-                throw new IllegalArgumentException("Given accountID was invalid! Error!");
-            }
+        this.context = context;
+        this.accountID = accountID;
+
+        String resourceName = context.getResources().getResourceName(key_resource_ID);
+
+        if( resourceName != null )
+        {
+            this.key_resource_ID = key_resource_ID;
         }
         else
         {
-            throw new IllegalArgumentException("Given context was null! Error!");
+            throw new IllegalArgumentException("Given key resource was invalid! Error!");
         }
     }
 
 
     /**
+     * This function is used for the initial setup of Credentials built.
+     * All given parameters are mandatory, even if singleton object already exists.
+     *
      * @param context
      * @param key_resource_ID
+     * @param accountID
+     * @return
      */
     public static CredentialBuilder setup(Context context, int key_resource_ID, String accountID)
     {
-        if( singleton == null )
+        synchronized( CredentialBuilder.class )
         {
-            synchronized( CredentialBuilder.class )
+            if( singleton == null )
             {
-                if( singleton == null )
-                {
-                    singleton = new CredentialBuilder(context, key_resource_ID, accountID);
-                }
+                singleton = new CredentialBuilder(context, key_resource_ID, accountID);
             }
         }
         return singleton;
@@ -98,86 +98,111 @@ public class CredentialBuilder
 
 
     /**
+     * Adds a specific HttpTransport for the HTTP communication.
+     *
      * @param httpTransport
-     * @return
      */
     public CredentialBuilder transporter(HttpTransport httpTransport)
     {
-        if( httpTransport != null )
+        if( singleton == null )
         {
-            this.httpTransport = httpTransport;
-
-            return this;
+            throw new NullPointerException("Singleton object is null. " +
+                    "Setup() must be run before any other builder functions.");
         }
-        else
+
+        if( httpTransport == null )
         {
             throw new IllegalArgumentException("Given HttpTransport was null! Error!");
         }
+
+        this.httpTransport = httpTransport;
+
+        return this;
+
     }
 
 
     /**
+     * Adds a specific JsonFactory for the JSON handling.
+     *
      * @param factory
-     * @return
      */
     public CredentialBuilder jsonFactory(JsonFactory factory)
     {
-        if( factory != null )
+        if( singleton == null )
         {
-            this.jsonFactory = factory;
-
-            return this;
+            throw new NullPointerException("Singleton object is null. " +
+                    "Setup() must be run before any other builder functions.");
         }
-        else
+
+        if( factory == null )
         {
             throw new IllegalArgumentException("Given JsonFactory was null! Error!");
         }
+
+        this.jsonFactory = factory;
+
+        return this;
     }
 
 
     /**
+     * Adds a specific CredentialScope for the Credential instance.
+     * <p/>
+     * Options:
+     * DEVSTORAGE_FULL_CONTROL
+     * DEVSTORAGE_READ_ONLY
+     * DEVSTORAGE_READ_WRITE
      *
      * @param scope
      * @return
      */
     public CredentialBuilder scope(CredentialScope scope)
     {
-        if( scope != null )
+        if( singleton == null )
         {
-            if( scope == CredentialScope.DEVSTORAGE_FULL_CONTROL )
-            {
-                scopes = new ArrayList<>();
-                scopes.add(StorageScopes.DEVSTORAGE_FULL_CONTROL);
+            throw new NullPointerException("Singleton object is null. " +
+                    "Setup() must be run before any other builder functions.");
+        }
 
-                return this;
-            }
-            else if( scope == CredentialScope.DEVSTORAGE_READ_ONLY )
-            {
-                scopes = new ArrayList<>();
-                scopes.add(StorageScopes.DEVSTORAGE_READ_ONLY);
+        if( scope == null )
+        {
+            throw new IllegalArgumentException("Given CredentialScope was null! Error!");
+        }
 
-                return this;
-            }
-            else if( scope == CredentialScope.DEVSTORAGE_READ_WRITE )
-            {
-                scopes = new ArrayList<>();
-                scopes.add(StorageScopes.DEVSTORAGE_READ_WRITE);
 
-                return this;
-            }
-            else
-            {
-                throw new IllegalArgumentException("Given CredentialScope was invalid! Error!");
-            }
+        if( scope == CredentialScope.DEVSTORAGE_FULL_CONTROL )
+        {
+            scopes = new ArrayList<>();
+            scopes.add(StorageScopes.DEVSTORAGE_FULL_CONTROL);
+
+            return this;
+        }
+        else if( scope == CredentialScope.DEVSTORAGE_READ_ONLY )
+        {
+            scopes = new ArrayList<>();
+            scopes.add(StorageScopes.DEVSTORAGE_READ_ONLY);
+
+            return this;
+        }
+        else if( scope == CredentialScope.DEVSTORAGE_READ_WRITE )
+        {
+            scopes = new ArrayList<>();
+            scopes.add(StorageScopes.DEVSTORAGE_READ_WRITE);
+
+            return this;
         }
         else
         {
-            throw new IllegalArgumentException("Given CredentialScope was null! Error!");
+            throw new IllegalArgumentException("Given CredentialScope was invalid! Error!");
         }
     }
 
 
     /**
+     * Here the actual Credentials are built with any parameters provided to this class, such
+     * as JsonFactory, Scope and HttpTransport. If any parameters are not provided, stock
+     * options will be used.
      *
      * @return
      * @throws IOException
@@ -251,7 +276,9 @@ public class CredentialBuilder
 
 
     /**
-     * This function returns a File object pointing to the p12 key required for Google Cloud.
+     * This function returns a (temporary) File object pointing to the p12 key required
+     * for Google Cloud.
+     * The key is read into a File because that is what the Credential building process requires.
      *
      * @param context
      * @param key_resource_ID
@@ -260,6 +287,11 @@ public class CredentialBuilder
      */
     private File getGoogleCloudKeyFile(Context context, int key_resource_ID) throws IOException
     {
+        if( context == null )
+        {
+            throw new IllegalArgumentException("Given Context was null! Error!");
+        }
+
         // The InputStream from the key asset. See: http://stackoverflow.com/a/10402757/2279240
         InputStream keyStream = context.getResources().openRawResource(key_resource_ID);
 
@@ -281,6 +313,9 @@ public class CredentialBuilder
     }
 
 
+    /**
+     * This is an Enum for the Scope of the Credentials built for the GoogleStorage object.
+     */
     public enum CredentialScope
     {
         DEVSTORAGE_FULL_CONTROL, DEVSTORAGE_READ_ONLY, DEVSTORAGE_READ_WRITE
