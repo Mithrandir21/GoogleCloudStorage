@@ -9,8 +9,14 @@ A library for simple communication with Google Cloud Storage.
 - Easy to debug with existing, simple to understand debug log.
 
 ### Setup:
-Working on creating simple Gradle dependency possibility for easy library usage.<br>
-But for now, you can simple code any part of the code you think is useful.
+There are 2 things necessary to work with Google Cloud Storage:
+- An AccountID from the Google Developer Console. [Get AccountID](https://developers.google.com/identity/protocols/OAuth2ServiceAccount#creatinganaccount)
+- A Public/Private P12 key from the Google Developer Console. [Create P12 Key](https://cloud.google.com/storage/docs/authentication?hl=en#generating-a-private-key)
+
+Add this line to your Gradle configuration:
+```java
+compile 'com.bahram:gcs-library:0.0.4'
+```
 
 ### Usage:
 ```java
