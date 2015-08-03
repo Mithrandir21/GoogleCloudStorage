@@ -13,9 +13,19 @@ There are 2 things necessary to work with Google Cloud Storage:
 - An AccountID from the Google Developer Console. [Get AccountID](https://developers.google.com/identity/protocols/OAuth2ServiceAccount#creatinganaccount)
 - A Public/Private P12 key from the Google Developer Console. [Create P12 Key](https://cloud.google.com/storage/docs/authentication?hl=en#generating-a-private-key)
 
+
+Min Android SDK: 8<br>
 Add this line to your Gradle configuration:
 ```java
-compile 'com.bahram:gcs-library:0.0.4'
+repositories 
+{
+  jcenter()
+}
+    
+dependencies 
+{
+  compile 'com.bahram:gcs-library:0.0.6'
+}
 ```
 
 ### Usage:
@@ -40,7 +50,6 @@ if( CloudImageCRUD.insertCloudImage(googleStorage, fullPath, image, format) )
 }
 ```
 
-Min Android SDK: 8
 
 
 ### Future Features:
