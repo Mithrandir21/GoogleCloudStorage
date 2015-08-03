@@ -24,9 +24,13 @@ repositories
     
 dependencies 
 {
-  compile 'com.bahram:gcs-library:0.0.6'
+  compile 'com.bahram:gcs-library:0.1.+' // See Version explanation
 }
 ```
+
+######Version explanation:<br>
+Odd numbers  - Bug fixes. No new features, safe to update.<br>
+Even numbers - New feature implementations. Any depreciations or serious changes will be informed.<br>
 
 ### Usage:
 ```java
