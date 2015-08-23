@@ -1,4 +1,4 @@
-package bahram.com.gcs.utils;
+package com.bahram.gcsLibrary.utils;
 
 import android.graphics.Bitmap;
 

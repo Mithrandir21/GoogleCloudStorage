@@ -1,4 +1,4 @@
-package bahram.com.gcs.core;
+package com.bahram.gcsLibrary.core;
 
 import com.google.api.client.auth.oauth2.Credential;
 import com.google.api.client.http.HttpTransport;
@@ -44,7 +44,7 @@ public class GoogleStorage
             throw new IllegalArgumentException("Given Credential was null! Error!");
         }
 
-        if( bucketName == null || bucketName.length() > 0 )
+        if( bucketName == null || bucketName.length() < 1 )
         {
             throw new IllegalArgumentException("Given Bucket name is invalid! Error!");
         }
@@ -69,7 +69,7 @@ public class GoogleStorage
      */
     public static synchronized GoogleStorage build(String bucketName, Credential credential)
     {
-        if( bucketName == null || bucketName.length() > 0 )
+        if( bucketName == null || bucketName.length() < 1 )
         {
             throw new IllegalArgumentException("Given Bucket name is invalid! Error!");
         }

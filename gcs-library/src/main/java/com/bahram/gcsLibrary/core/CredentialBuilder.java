@@ -1,4 +1,4 @@
-package bahram.com.gcs.core;
+package com.bahram.gcsLibrary.core;
 
 import android.content.Context;
 import android.util.Log;
@@ -53,7 +53,7 @@ public class CredentialBuilder
             throw new IllegalArgumentException("Given context was null! Error!");
         }
 
-        if( accountID == null || accountID.length() > 0 )
+        if( accountID == null || accountID.length() < 1 )
         {
             throw new IllegalArgumentException("Given accountID was invalid! Error!");
         }

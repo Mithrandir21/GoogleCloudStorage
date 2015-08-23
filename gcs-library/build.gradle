@@ -6,14 +6,14 @@ ext {
 
     publishedGroupId = 'com.bahram'
     libraryName = 'GoogleCloudStorage'
-    artifact = 'gcs'
+    artifact = 'gcs-library'
 
-    libraryDescription = 'A library for simple communication with Google Cloud Storage.'
+    libraryDescription = 'A library for simple communication with Google Cloud Storage for Android.'
 
     siteUrl = 'https://github.com/Mithrandir21/GoogleCloudStorage'
     gitUrl = 'https://github.com/Mithrandir21/GoogleCloudStorage.git'
 
-    libraryVersion = '0.0.1'
+    libraryVersion = '0.1.1'
 
     developerId = 'mithrandir21'
     developerName = 'Bahram Malaekeh'
@@ -29,7 +29,7 @@ android {
     buildToolsVersion "22.0.1"
 
     defaultConfig {
-        minSdkVersion 14
+        minSdkVersion 8
         targetSdkVersion 21
         versionCode 1
         versionName "1.0"

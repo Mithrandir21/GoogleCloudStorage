@@ -1,4 +1,4 @@
-package bahram.com.gcs.core;
+package com.bahram.gcsLibrary.core;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.provider.MediaStore;
 import android.util.Log;
 
+import com.bahram.gcsLibrary.utils.MediaManipulation;
 import com.google.api.client.http.InputStreamContent;
 import com.google.api.services.storage.Storage;
 import com.google.api.services.storage.model.StorageObject;
@@ -15,8 +16,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-
-import bahram.com.gcs.utils.MediaManipulation;
 
 /**
  * Created by bahram on 09.04.2015.
@@ -170,8 +169,15 @@ public class CloudImageCRUD
              * This can happen for a number of reasons, like attempting to read a file that does
              * not exist or attempting to read an file that is not an image.
              */
-            Log.e(TAG, "Error:" + e.getMessage());
-            e.printStackTrace();
+            if( e.getMessage().contains("404 Not Found") )
+            {
+                Log.w(TAG, "Cloud Object (" + imageFullPath + ") not found.");
+            }
+            else
+            {
+                Log.e(TAG, "Error:" + e.getMessage());
+                e.printStackTrace();
+            }
         }
         finally
         {
