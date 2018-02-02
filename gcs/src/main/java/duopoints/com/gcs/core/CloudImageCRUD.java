@@ -1,4 +1,4 @@
-package com.bahram.gcsLibrary.core;
+package duopoints.com.gcs.core;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -6,7 +6,6 @@ import android.net.Uri;
 import android.provider.MediaStore;
 import android.util.Log;
 
-import com.bahram.gcsLibrary.utils.MediaManipulation;
 import com.google.api.client.http.InputStreamContent;
 import com.google.api.services.storage.Storage;
 import com.google.api.services.storage.model.StorageObject;
@@ -17,18 +16,15 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
-/**
- * Created by bahram on 09.04.2015.
- */
-public class CloudImageCRUD
-{
+import duopoints.com.gcs.utils.MediaManipulation;
+
+public class CloudImageCRUD {
     private static final String TAG = "CloudImageCRUD";
-
-
+    
     /**
      * Attempts to insert the image in the given Bitmap into the given GoogleStorage, at the given
      * imageFullPath with the given format.
-     *
+     * <p>
      * All parameters are mandatory.
      * <p/>
      * NOTE: See full path explanation:
@@ -38,30 +34,24 @@ public class CloudImageCRUD
      * @param imageFullPath
      * @param image
      * @param format
+     *
      * @return
      * @throws IOException
      */
-    public static boolean insertCloudImage(GoogleStorage googleStorage, String imageFullPath, Bitmap image,
-                                           MediaManipulation.SupportedImageFormats format)
-            throws IOException
-    {
-        if( googleStorage == null )
-        {
+    public static boolean insertCloudImage(GoogleStorage googleStorage, String imageFullPath, Bitmap image, MediaManipulation.SupportedImageFormats format) throws IOException {
+        if (googleStorage == null) {
             throw new IllegalArgumentException("Given GoogleStorage was null!");
         }
 
-        if( (imageFullPath == null || imageFullPath.length() < 1) )
-        {
+        if ((imageFullPath == null || imageFullPath.length() < 1)) {
             throw new IllegalArgumentException("Given imageFullPath was null or empty!");
         }
 
-        if( image == null )
-        {
+        if (image == null) {
             throw new IllegalArgumentException("Given image was null!");
         }
 
-        if( format == null )
-        {
+        if (format == null) {
             throw new IllegalArgumentException("Given format was null!");
         }
 
@@ -95,7 +85,6 @@ public class CloudImageCRUD
         return true;
     }
 
-
     /**
      * Attempt to read an Image from the given GoogleStorage reference with the given full path,
      * including filename.
@@ -107,24 +96,20 @@ public class CloudImageCRUD
      * @param context
      * @param googleStorage
      * @param imageFullPath
+     *
      * @return
      * @throws IOException
      */
-    public static Bitmap readCloudImage(Context context, GoogleStorage googleStorage, String imageFullPath)
-            throws IOException
-    {
-        if( context == null )
-        {
+    public static Bitmap readCloudImage(Context context, GoogleStorage googleStorage, String imageFullPath) throws IOException {
+        if (context == null) {
             throw new IllegalArgumentException("Given Context was null! Error!");
         }
 
-        if( googleStorage == null )
-        {
+        if (googleStorage == null) {
             throw new IllegalArgumentException("Given GoogleStorage was null! Error!");
         }
 
-        if( (imageFullPath == null || imageFullPath.length() < 1) )
-        {
+        if ((imageFullPath == null || imageFullPath.length() < 1)) {
             throw new IllegalArgumentException("Given imageFullPath was null or empty! Error!");
         }
 
@@ -135,8 +120,7 @@ public class CloudImageCRUD
 
         Bitmap image = null;
 
-        try
-        {
+        try {
             Storage storage = googleStorage.getStorage();
 
             Storage.Objects.Get get = storage.objects().get(googleStorage.getBucketName(), imageFullPath);
@@ -145,13 +129,11 @@ public class CloudImageCRUD
             FileOutputStream streamOutput = new FileOutputStream(tempFile);
             Log.d(TAG, "Created file output stream for actual data.");
 
-            try
-            {
+            try {
                 get.executeMediaAndDownloadTo(streamOutput);
                 Log.d(TAG, "Finished reading data.");
             }
-            finally
-            {
+            finally {
                 streamOutput.close();
                 Log.d(TAG, "Closing output stream.");
             }
@@ -163,31 +145,25 @@ public class CloudImageCRUD
             image = MediaStore.Images.Media.getBitmap(context.getContentResolver(), uri);
             Log.d(TAG, "Creating bitmap.");
         }
-        catch( Exception e )
-        {
+        catch ( Exception e ) {
             /**
              * This can happen for a number of reasons, like attempting to read a file that does
              * not exist or attempting to read an file that is not an image.
              */
-            if( e.getMessage().contains("404 Not Found") )
-            {
+            if (e.getMessage().contains("404 Not Found")) {
                 Log.w(TAG, "Cloud Object (" + imageFullPath + ") not found.");
-            }
-            else
-            {
+            } else {
                 Log.e(TAG, "Error:" + e.getMessage());
                 e.printStackTrace();
             }
         }
-        finally
-        {
+        finally {
             tempFile.delete();
             Log.d(TAG, "Deleting the temporary download file.");
         }
 
         return image;
     }
-
 
     /**
      * This function attempts to replace an object with the given imageFullPath, size and format
@@ -205,37 +181,30 @@ public class CloudImageCRUD
      * @param imageFullPath
      * @param newImage
      * @param format
+     *
      * @return
      * @throws IOException
      */
-    public static boolean replaceCloudImage(GoogleStorage googleStorage, String imageFullPath, Bitmap newImage,
-                                            MediaManipulation.SupportedImageFormats format)
-            throws IOException
-    {
-        if( googleStorage == null )
-        {
+    public static boolean replaceCloudImage(GoogleStorage googleStorage, String imageFullPath, Bitmap newImage, MediaManipulation.SupportedImageFormats format) throws IOException {
+        if (googleStorage == null) {
             throw new IllegalArgumentException("Given GoogleStorage was null! Error!");
         }
 
-        if( (imageFullPath == null || imageFullPath.length() < 1) )
-        {
+        if ((imageFullPath == null || imageFullPath.length() < 1)) {
             throw new IllegalArgumentException("Given imageFullPath was null or empty! Error!");
         }
 
-        if( newImage == null )
-        {
+        if (newImage == null) {
             throw new IllegalArgumentException("Given Bitmap was null or empty! Error!");
         }
 
-        if( format == null )
-        {
+        if (format == null) {
             throw new IllegalArgumentException("Given SupportedImageFormats was null or empty! Error!");
         }
 
 
         // 1. First deletes the old object
-        if( deleteCloudImage(googleStorage, imageFullPath) )
-        {
+        if (deleteCloudImage(googleStorage, imageFullPath)) {
             // 2. Then inserts new object with same name.
             return insertCloudImage(googleStorage, imageFullPath, newImage, format);
         }
@@ -243,10 +212,9 @@ public class CloudImageCRUD
         return false;
     }
 
-
     /**
      * Attempts to delete an image at the given imageFullPath in the given GoogleStorage.
-     *
+     * <p>
      * All parameters are mandatory.
      * <p/>
      * NOTE: See full path explanation:
@@ -254,19 +222,16 @@ public class CloudImageCRUD
      *
      * @param googleStorage
      * @param imageFullPath
+     *
      * @return
      * @throws IOException
      */
-    public static boolean deleteCloudImage(GoogleStorage googleStorage, String imageFullPath)
-            throws IOException
-    {
-        if( googleStorage == null )
-        {
+    public static boolean deleteCloudImage(GoogleStorage googleStorage, String imageFullPath) throws IOException {
+        if (googleStorage == null) {
             throw new IllegalArgumentException("Given GoogleStorage was null! Error!");
         }
 
-        if( (imageFullPath == null || imageFullPath.length() < 1) )
-        {
+        if ((imageFullPath == null || imageFullPath.length() < 1)) {
             throw new IllegalArgumentException("Given imageFullPath was null or empty! Error!");
         }
 

@@ -1,4 +1,4 @@
-package com.bahram.gcsLibrary.core;
+package duopoints.com.gcs.core;
 
 import com.google.api.client.auth.oauth2.Credential;
 import com.google.api.client.http.HttpTransport;
@@ -20,8 +20,7 @@ import com.google.api.services.storage.Storage;
  * <p/>
  * Created by bahram on 11.03.2015.
  */
-public class GoogleStorage
-{
+public class GoogleStorage {
     private static volatile GoogleStorage singleton = null;
 
     private static String bucketName;
@@ -37,15 +36,12 @@ public class GoogleStorage
      * @param bucketName
      * @param credential
      */
-    private GoogleStorage(String bucketName, Credential credential)
-    {
-        if( credential == null )
-        {
+    private GoogleStorage(String bucketName, Credential credential) {
+        if (credential == null) {
             throw new IllegalArgumentException("Given Credential was null! Error!");
         }
 
-        if( bucketName == null || bucketName.length() < 1 )
-        {
+        if (bucketName == null || bucketName.length() < 1) {
             throw new IllegalArgumentException("Given Bucket name is invalid! Error!");
         }
 
@@ -65,25 +61,20 @@ public class GoogleStorage
      *
      * @param bucketName The name of the referencing 'Bucket' in the cloud storage.
      * @param credential
+     *
      * @return
      */
-    public static synchronized GoogleStorage build(String bucketName, Credential credential)
-    {
-        if( bucketName == null || bucketName.length() < 1 )
-        {
+    public static synchronized GoogleStorage build(String bucketName, Credential credential) {
+        if (bucketName == null || bucketName.length() < 1) {
             throw new IllegalArgumentException("Given Bucket name is invalid! Error!");
         }
 
-        if( singleton != null )
-        {
+        if (singleton != null) {
             // If the singleton object is referencing a different bucket, re-create singleton.
-            if( !singleton.getBucketName().equals(bucketName) )
-            {
+            if (!singleton.getBucketName().equals(bucketName)) {
                 singleton = new GoogleStorage(bucketName, credential);
             }
-        }
-        else
-        {
+        } else {
             singleton = new GoogleStorage(bucketName, credential);
         }
 
@@ -98,29 +89,23 @@ public class GoogleStorage
      *
      * @param bucketName
      * @param credential
+     *
      * @return
      */
-    private static void setupStorage(String bucketName, Credential credential)
-    {
+    private static void setupStorage(String bucketName, Credential credential) {
         HttpTransport httpTransport;
         JsonFactory jsonFactory;
 
-        if( credential.getTransport() != null )
-        {
+        if (credential.getTransport() != null) {
             httpTransport = credential.getTransport();
-        }
-        else
-        {
+        } else {
             httpTransport = new ApacheHttpTransport();
         }
 
 
-        if( credential.getJsonFactory() != null )
-        {
+        if (credential.getJsonFactory() != null) {
             jsonFactory = credential.getJsonFactory();
-        }
-        else
-        {
+        } else {
             jsonFactory = new JacksonFactory();
         }
 
@@ -131,13 +116,11 @@ public class GoogleStorage
     }
 
 
-    public String getBucketName()
-    {
+    public String getBucketName() {
         return bucketName;
     }
 
-    public Storage getStorage()
-    {
+    public Storage getStorage() {
         return storage;
     }
 }

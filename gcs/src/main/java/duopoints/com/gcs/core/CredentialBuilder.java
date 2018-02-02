@@ -1,4 +1,4 @@
-package com.bahram.gcsLibrary.core;
+package duopoints.com.gcs.core;
 
 import android.content.Context;
 import android.util.Log;
@@ -20,11 +20,7 @@ import java.security.GeneralSecurityException;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by bahram on 09.04.2015.
- */
-public class CredentialBuilder
-{
+public class CredentialBuilder {
     private static final String TAG = "CredentialBuilder";
 
     private static volatile CredentialBuilder singleton = null;
@@ -46,15 +42,12 @@ public class CredentialBuilder
      * @param key_resource_ID
      * @param accountID
      */
-    private CredentialBuilder(Context context, int key_resource_ID, String accountID)
-    {
-        if( context == null )
-        {
+    private CredentialBuilder(Context context, int key_resource_ID, String accountID) {
+        if (context == null) {
             throw new IllegalArgumentException("Given context was null! Error!");
         }
 
-        if( accountID == null || accountID.length() < 1 )
-        {
+        if (accountID == null || accountID.length() < 1) {
             throw new IllegalArgumentException("Given accountID was invalid! Error!");
         }
 
@@ -64,16 +57,12 @@ public class CredentialBuilder
 
         String resourceName = context.getResources().getResourceName(key_resource_ID);
 
-        if( resourceName != null )
-        {
+        if (resourceName != null) {
             this.key_resource_ID = key_resource_ID;
-        }
-        else
-        {
+        } else {
             throw new IllegalArgumentException("Given key resource was invalid! Error!");
         }
     }
-
 
     /**
      * This function is used for the initial setup of Credentials built.
@@ -82,36 +71,30 @@ public class CredentialBuilder
      * @param context
      * @param key_resource_ID
      * @param accountID
+     *
      * @return
      */
-    public static CredentialBuilder setup(Context context, int key_resource_ID, String accountID)
-    {
-        synchronized( CredentialBuilder.class )
-        {
-            if( singleton == null )
-            {
+    public static CredentialBuilder setup(Context context, int key_resource_ID, String accountID) {
+        synchronized ( CredentialBuilder.class ) {
+            if (singleton == null) {
                 singleton = new CredentialBuilder(context, key_resource_ID, accountID);
             }
         }
         return singleton;
     }
 
-
     /**
      * Adds a specific HttpTransport for the HTTP communication.
      *
      * @param httpTransport
      */
-    public CredentialBuilder transporter(HttpTransport httpTransport)
-    {
-        if( singleton == null )
-        {
+    public CredentialBuilder transporter(HttpTransport httpTransport) {
+        if (singleton == null) {
             throw new NullPointerException("Singleton object is null. " +
                     "Setup() must be run before any other builder functions.");
         }
 
-        if( httpTransport == null )
-        {
+        if (httpTransport == null) {
             throw new IllegalArgumentException("Given HttpTransport was null! Error!");
         }
 
@@ -121,22 +104,18 @@ public class CredentialBuilder
 
     }
 
-
     /**
      * Adds a specific JsonFactory for the JSON handling.
      *
      * @param factory
      */
-    public CredentialBuilder jsonFactory(JsonFactory factory)
-    {
-        if( singleton == null )
-        {
+    public CredentialBuilder jsonFactory(JsonFactory factory) {
+        if (singleton == null) {
             throw new NullPointerException("Singleton object is null. " +
                     "Setup() must be run before any other builder functions.");
         }
 
-        if( factory == null )
-        {
+        if (factory == null) {
             throw new IllegalArgumentException("Given JsonFactory was null! Error!");
         }
 
@@ -144,7 +123,6 @@ public class CredentialBuilder
 
         return this;
     }
-
 
     /**
      * Adds a specific CredentialScope for the Credential instance.
@@ -155,49 +133,41 @@ public class CredentialBuilder
      * DEVSTORAGE_READ_WRITE
      *
      * @param scope
+     *
      * @return
      */
-    public CredentialBuilder scope(CredentialScope scope)
-    {
-        if( singleton == null )
-        {
+    public CredentialBuilder scope(CredentialScope scope) {
+        if (singleton == null) {
             throw new NullPointerException("Singleton object is null. " +
                     "Setup() must be run before any other builder functions.");
         }
 
-        if( scope == null )
-        {
+        if (scope == null) {
             throw new IllegalArgumentException("Given CredentialScope was null! Error!");
         }
 
 
-        if( scope == CredentialScope.DEVSTORAGE_FULL_CONTROL )
-        {
+        // TODO - Replace CredentialScope with actual StorageScopes
+
+        if (scope == CredentialScope.DEVSTORAGE_FULL_CONTROL) {
             scopes = new ArrayList<>();
             scopes.add(StorageScopes.DEVSTORAGE_FULL_CONTROL);
 
             return this;
-        }
-        else if( scope == CredentialScope.DEVSTORAGE_READ_ONLY )
-        {
+        } else if (scope == CredentialScope.DEVSTORAGE_READ_ONLY) {
             scopes = new ArrayList<>();
             scopes.add(StorageScopes.DEVSTORAGE_READ_ONLY);
 
             return this;
-        }
-        else if( scope == CredentialScope.DEVSTORAGE_READ_WRITE )
-        {
+        } else if (scope == CredentialScope.DEVSTORAGE_READ_WRITE) {
             scopes = new ArrayList<>();
             scopes.add(StorageScopes.DEVSTORAGE_READ_WRITE);
 
             return this;
-        }
-        else
-        {
+        } else {
             throw new IllegalArgumentException("Given CredentialScope was invalid! Error!");
         }
     }
-
 
     /**
      * Here the actual Credentials are built with any parameters provided to this class, such
@@ -208,8 +178,7 @@ public class CredentialBuilder
      * @throws IOException
      * @throws GeneralSecurityException
      */
-    public Credential build() throws IOException, GeneralSecurityException
-    {
+    public Credential build() throws IOException, GeneralSecurityException {
         GoogleCredential.Builder credential = new GoogleCredential.Builder();
         Log.d(TAG, "Initiated Builder");
 
@@ -225,26 +194,20 @@ public class CredentialBuilder
 
 
         // 3. HttpTransport
-        if( httpTransport != null )
-        {
+        if (httpTransport != null) {
             credential.setTransport(httpTransport);
             Log.d(TAG, "Setup given HttpTransport");
-        }
-        else
-        {
+        } else {
             credential.setTransport(new ApacheHttpTransport());
             Log.d(TAG, "Setup stock HttpTransport (ApacheHttpTransport)");
         }
 
 
         // 4. Scope
-        if( scopes != null && scopes.size() > 0 )
-        {
+        if (scopes != null && scopes.size() > 0) {
             credential.setServiceAccountScopes(scopes);
             Log.d(TAG, "Setup given scope");
-        }
-        else
-        {
+        } else {
             scopes = new ArrayList<>();
             scopes.add(StorageScopes.DEVSTORAGE_FULL_CONTROL);
             credential.setServiceAccountScopes(scopes);
@@ -253,13 +216,10 @@ public class CredentialBuilder
 
 
         // 5. JsonFactory
-        if( jsonFactory != null )
-        {
+        if (jsonFactory != null) {
             credential.setJsonFactory(jsonFactory);
             Log.d(TAG, "Setup given JsonFactory");
-        }
-        else
-        {
+        } else {
             credential.setJsonFactory(new JacksonFactory());
             Log.d(TAG, "Setup stock JsonFactory (JacksonFactory)");
         }
@@ -274,7 +234,6 @@ public class CredentialBuilder
         return builtCredential;
     }
 
-
     /**
      * This function returns a (temporary) File object pointing to the p12 key required
      * for Google Cloud.
@@ -282,13 +241,12 @@ public class CredentialBuilder
      *
      * @param context
      * @param key_resource_ID
+     *
      * @return
      * @throws IOException
      */
-    private File getGoogleCloudKeyFile(Context context, int key_resource_ID) throws IOException
-    {
-        if( context == null )
-        {
+    private File getGoogleCloudKeyFile(Context context, int key_resource_ID) throws IOException {
+        if (context == null) {
             throw new IllegalArgumentException("Given Context was null! Error!");
         }
 
@@ -304,20 +262,17 @@ public class CredentialBuilder
         int read = 0;
         byte[] bytes = new byte[1024];
 
-        while( (read = keyStream.read(bytes)) != -1 )
-        {
+        while ( (read = keyStream.read(bytes)) != -1 ) {
             tempFileStream.write(bytes, 0, read);
         }
 
         return tempKeyFile;
     }
 
-
     /**
      * This is an Enum for the Scope of the Credentials built for the GoogleStorage object.
      */
-    public enum CredentialScope
-    {
+    public enum CredentialScope {
         DEVSTORAGE_FULL_CONTROL, DEVSTORAGE_READ_ONLY, DEVSTORAGE_READ_WRITE
     }
 }
