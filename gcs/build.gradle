@@ -1,5 +1,5 @@
 apply plugin: 'com.android.library'
-apply plugin: 'com.github.dcendents.android-maven'
+apply plugin: 'maven-publish'
 group = 'com.github.Mithrandir21'
 
 android {
@@ -25,13 +25,13 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
     // Google Cloud libraries
-    compile('com.google.api-client:google-api-client:1.23.0') {
+    implementation('com.google.api-client:google-api-client:1.23.0') {
         exclude(group: 'org.apache.httpcomponents', module: 'httpclient')
     }
-    compile('com.google.api-client:google-api-client-gson:1.23.0') {
+    implementation('com.google.api-client:google-api-client-gson:1.23.0') {
         exclude(group: 'org.apache.httpcomponents', module: 'httpclient')
     }
-    compile('com.google.apis:google-api-services-storage:v1-rev120-1.23.0') {
+    implementation('com.google.apis:google-api-services-storage:v1-rev120-1.23.0') {
         exclude(group: 'org.apache.httpcomponents', module: 'httpclient')
     }
 }
