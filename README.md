@@ -24,7 +24,7 @@ repositories
     
 dependencies 
 {
-  compile 'com.github.Mithrandir21:GoogleCloudStorage:1.0.1'
+  compile 'com.bahram:gcs-library:0.1.+'
 }
 ```
 
