@@ -14,7 +14,7 @@ There are 2 things necessary to work with Google Cloud Storage:
 - A Public/Private P12 key from the Google Developer Console. [Create P12 Key](https://cloud.google.com/storage/docs/authentication?hl=en#generating-a-private-key)
 
 
-Min Android SDK: 8<br>
+Min Android SDK: 14<br>
 Add this line to your Gradle configuration:
 ```java
 repositories 
@@ -24,7 +24,7 @@ repositories
     
 dependencies 
 {
-  compile 'com.bahram:gcs-library:0.1.+' // See Version explanation
+  compile 'com.github.Mithrandir21:GoogleCloudStorage:1.0.1'
 }
 ```
 
@@ -62,7 +62,9 @@ if( CloudImageCRUD.insertCloudImage(googleStorage, fullPath, image, format) )
 - Auto-Scaling function for retrieved images (avoid OutOfMemory exceptions)
 
 <br>
-#### Cloud Storage explanations:
+
+### Cloud Storage explanations:
+
 ##### Bucket:
 "Buckets are the basic containers that hold your data. Everything that you store in Google Cloud Storage must be contained in a bucket."<br>
 See more about Buckets in the link below:<br>
@@ -93,7 +95,9 @@ See link for further information on object paths in Cloud Storage:<br>
 https://cloud.google.com/storage/docs/gsutil/addlhelp/HowSubdirectoriesWork
 
 <br>
+
 #### Credential and GoogleStorage options:
+
 ##### HttpTransport: 
 Any HttpTransport can be specified during Credential building.
 ```java
@@ -104,6 +108,12 @@ Credential cred = CredentialBuilder.setup(context, R.raw.gcs_key, APP_CLOUD_ACCO
 
 ##### JsonFactory: 
 Any JsonFactory can be specified during Credential building.
+```java
+Credential cred = CredentialBuilder.setup(context, R.raw.gcs_key, APP_CLOUD_ACCOUNT_ID)
+                  .transporter(new JacksonFactory()) // <-- Both Credential and GoogleStorage will use this
+                  .build();
+```
+OR
 ```java
 Credential cred = CredentialBuilder.setup(context, R.raw.gcs_key, APP_CLOUD_ACCOUNT_ID)
                   .transporter(new JacksonFactory()) // <-- Both Credential and GoogleStorage will use this
